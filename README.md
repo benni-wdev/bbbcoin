@@ -1,4 +1,4 @@
-bbbcoin 1.0.13
+bbbcoin 1.0.0
 =============
 
 What is bbbcoin?
@@ -33,11 +33,7 @@ height and can be explicitly disabled.
 Windows release
 ---------------
 
-There is a precompiled Windows version of bbbcoin. You can download it from
-https://github.com/Tomas-M/bbbcoin/releases/
-The download is 853 MB due to zkSNARK proving key which is included in the release.
-Simply unzip and read README.txt. If you use precompiled Windows binaries, you can
-skip to the section "Running" in this document now.
+coming soon
 
 
 Building
@@ -46,7 +42,7 @@ Building
 If you prefer to build bbbcoin from source code, you can do so by running
 the following commands in Linux:
 
-    git clone https://github.com/Tomas-M/bbbcoin.git
+    git clone https://github.com/BenniBanker/bbbcoin.git
     cd ./bbbcoin/zcutil
     ./bbbcoin_build_debian.sh # for debian/ubuntu based systems
 
@@ -67,16 +63,7 @@ The above mentioned command should configure your bbbcoin already by creating ~/
 Mining
 ------
 
-Solo mining with CPU is currently not worth. If you plan to mine bbbcoin, you should
-join a pool. There are several pools in operation at the moment, for example:
-
-    http://pool.bbbcoin.site
-    http://nibirupool.com
-    https://luckpool.org/
-    https://zsolo.bid/
-    http://bbbcoin.catspool.org/
-    https://multipool.es
-    http://pcmining.xyz:8080
+coming soon
 
 
 
@@ -152,24 +139,6 @@ Export wallet to a file (dump private keys)
     $ bbbcoin-cli z_exportwallet exportfilename
 
 You may need to specify export directory path using for example "exportdir=/tmp" in your ~/.bbbcoin/bbbcoin.conf
-
-
-Shortcut
---------
-
-There is a script called 'vot' for easier operation. It calls bbbcoin-cli with proper syntax. You may use it instead of bbbcoin-cli for selected commands:
-
-    $ vot addr ... generate new T address
-    $ vot zaddr ... generate new Z address
-    $ vot send FROM TO AMOUNT ... send coins FROM address to TO address of given AMOUNT, with zero fee
-    $ vot status ... show status of last transaction. Empty status means transaction still in progress
-    $ vot totals ... show total balances in your entire wallet
-    $ vot list ... list all addresses and their balances (non-zero only)
-    $ vot export ... show all your wallet addresses including their private keys
-
-Remember that the last two commands need to export your wallet to a temporary file, so if you are using a computer in shared environment (eg. a server where
-other users can login) then you need to make sure other users do not have access to the exported file. The exported file is deleted after the vot script
-finishes, but is accessible while the script is still running (eg. fetching balances etc).
 
 
 License
