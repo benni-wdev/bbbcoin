@@ -105,7 +105,7 @@ public:
 
 
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("mainnet.bbbcoin.site", "mainnet.bbbcoin.site")); // @str4d
+        //vSeeds.push_back(CDNSSeedData("mainnet.bbbcoin.site", "mainnet.bbbcoin.site")); // @str4d
         //vSeeds.push_back(CDNSSeedData("znodes.org", "dnsseed.znodes.org")); // @bitcartel
 
         // guarantees the first 2 characters, when base58 encoded, are "t1"
@@ -131,19 +131,21 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
-        checkpointData = (Checkpoints::CCheckpointData) {
-            boost::assign::map_list_of
-            (0,  uint256S("0004965806e8ccf828486dec85a26e5041f8b3396435d3f28acf33d3c216f95c")),
-          //  (10, uint256S("0x003fa6a6bbcea855fb76e478fda40c28b454e74537fbeb889e50b41710d4d41e"))
-          //  (10000, uint256S("0x00000fbda97b62268d2eb2ed9e63ae23a9a02c3f6cb7023cd56443a215c9c0ed"))
-          //  (16800, uint256S("0x0000009771cf774a233ca47b5ceee89dd9296c82e8c9b0a96d00f57b26d5925c"))
-          //  (39555, uint256S("0x0000000bbc03146dfb317de60c346b518e88defa4232db6f64b43a515b6d4df2")),
-            1516547307,    // * UNIX timestamp of last checkpoint block
-            0,        // * total number of transactions between genesis and last checkpoint
-                           //   (the tx=... number in the SetBestChain debug.log lines)
-            1000          // * estimated number of transactions per day after checkpoint
-                           //   total number of tx / checkpoint block height * 576
-        };
+		checkpointData = (Checkpoints::CCheckpointData)
+		{
+			boost::assign::map_list_of
+			    (  0, uint256S("0x0004965806e8ccf828486dec85a26e5041f8b3396435d3f28acf33d3c216f95c"))
+				(100, uint256S("0x00040768744267404c7aecdb1326a9dfefd44f011fc0adb4bf547c6b3842a9bb"))
+				(250, uint256S("0x001ca0eda0e5297e7a51a78588cbe8e4635f59900975cb41af00c86d7843531e")),
+			//  (16800, uint256S("0x0000009771cf774a233ca47b5ceee89dd9296c82e8c9b0a96d00f57b26d5925c"))
+			//  (39555, uint256S("0x0000000bbc03146dfb317de60c346b518e88defa4232db6f64b43a515b6d4df2")),
+			1516771569,    // * UNIX timestamp of last checkpoint block
+			0, // * total number of transactions between genesis and last checkpoint
+			   //   (the tx=... number in the SetBestChain debug.log lines)
+			100
+			// * estimated number of transactions per day after checkpoint
+			//   total number of tx / checkpoint block height * 576
+		};
 
         // Founders reward script expects a vector of 2-of-3 multisig addresses
         vFoundersRewardAddress = {
@@ -178,31 +180,30 @@ public:
         nPruneAfterHeight = 1000;
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime = 1516547307;
+        const char* pszTimestamp = "BBBC0b9c4eef8b7cc417ee5001e3500984b6fea35683a7cac141a043c42064835d34";
+	    CMutableTransaction txNew;
+	    txNew.vin.resize(1);
+	    txNew.vout.resize(1);
+	    txNew.vin[0].scriptSig = CScript() << 520617983 << CScriptNum(4) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+	    txNew.vout[0].nValue = 5000000000;
+	    txNew.vout[0].scriptPubKey = CScript() << ParseHex("044e7a1553392325c871c5ace5d6ad73501c66f4c185d6b0453cf45dec5a1322e705c672ac1a27ef7cdaf588c10effdf50ed5f95f85f2f54a5f6159fca394ed0c6") << OP_CHECKSIG;
+	    genesis.vtx.push_back(txNew);
+	    genesis.hashPrevBlock.SetNull();
+	    genesis.hashMerkleRoot = genesis.BuildMerkleTree();
+	    genesis.nVersion = 4;
+        genesis.nTime = 1516547308;
         genesis.nBits = 0x2007ffff;
-        genesis.nNonce = uint256S("0x000000000000000000000000000000000000000000000000000000000000001e");
-        genesis.nSolution = ParseHex("0364a12e11aabd49e5fa98297674700f0fe04ab54b685a7c1199646e259a5578");
+        genesis.nNonce = uint256S("0x000000000000000000000000000000000000000000000000000000000000141f");
+        genesis.nSolution = ParseHex("003731ae3cef89b7fc277125e764c019354e7f7d2c07b5fa332b9cc6ad96e1b3d62fd21eed5272ccb49001c4e91a7f231e33f0f6b24dc6760cf4f041b2838b10a793e4aedcb4b6f6f6538ab5786f7e206fdb417e02cb94e89c81b2367a6a24202eedba7a459d59826b2433cd7fa3dac44f7d087534b3d93f9a973e1b748d36825a195f5f4c1d1175d3aaebe91a5addd339836e74e25415947055d1a85bb9d536fe2d8b0c5cb87c530157bb1051e7f527ff2ed30f0c54b6992d03b754c50c61e3bd3f223a535dae41b32a32e3acd1c94b3051027e3ffebd01aa08b99e219b9171a060a63fd2d52f065c4900480b929f3369e7b688ec5f27480c1cc98e108e40c496582a734da0e31c8ebfbadcdf75d750df30ecda69a5da859550ff5791ab69fe7395943f684b498225f8a3eb3029c40d559b1241d5e9c6fc35e35d50e1d6c2865e856d29e02758d4c55f2730b7f9b4dc03f7e9c80835d335e19540f2053e7b7548eb2f17162716b6b10c6a4a1f9e90f93f314b10eed94d7f207f0cc5d66a2d1374e187cb12ec87d09e0dcf89feac681f339c5792290b5dd03e54c018f8181abbe3bd2d200659b460fa47280d7ca902b1eeb8a8752e9b74db5322b951302a8c9b776465b243e1238a3d4ffe3b885f0b9d2dc2a7f9bf31ec736a515f66fc5ae068da09654b2c1fc5cca699a33fb99695237ea0f9e086736a5c04cbfbdff367b7517709205b00456d35b2b0da4321225dbcfbc59ab809df1d12ad8b2132c4d83f547f9f0a23561f2009009ce3f2649a4b24fd37976e9f5bf718502996395af9d34fb21b06f675b3a702119c49b506e0eeb5392b1ec3ad41f2a9b4d45f3d5881fe61b0155dad0aad5ffa5f307595d52eefffb760d81d5f590f3e6cf4b092d483b40615c4d27f2c3e432a9cc4c12e85d6a5061a32e78464e5fd7ffe8dca0cb0d5944302c525fc53114e74bdc195f766b405eb382d5a47415b6aa526dbe9b6e55f91f84fb2eff446355232617506f7badce9e53af9d0f921137394fb9463342bf148662d2fae389d0c0bbf5777b8a7ff7bce035b92ce5203f4f87d4a41df6330cbf2b386f59c6663ec3a8a89298dab9316f325dbd5bb8cd09f743c8348fd9ba2e20470f4ff87f129f3eb89908c5fdac7fc5617ea43a7365a2d205257cf5d873fe3b188b06a4de6e930835b0367e883a80d5fb1e57c53a3ef635b5919acfc60521060cb3094124d3b09e3358b2dba64da95893584c8047b5239a75953af2c7c02f98ce685de577afa9de63143866e741059c70f27356ef2efca05b05697899a0a134dcc6aecb30598d900b8d854ca556683317e871059ca41431acc2f5c1e2118f4f7966ad341397a990cd501466989baca898c860ca473c9fe1e0c1be46e1aad3beb63cfc67d39a615b3dd4ede0e0ce1162b3502f7fb397a474720cb32255469e2af76fb147906e103786e3fec1deedf60c88139a464ab7e04775644e70a6274dd7495038eda5f751e3e45d0a5886eed82171f86b510875a4237be5b923d43c331ee02b91f2c3b11426ff939d1b772bf1081ed6672ac0e87a7fc506c18161ac79146b4ca3a97c1d249dbabf0df514e8617181a045fefcfb30dcb0cc33b324eb5b95e5fd0237d423edc816a6f50d99a5b563206fe2d51b95d1eeb0009db2d53c55c3fab93b2e35e14456e67ac485ebf390a74ad5e23deec19c582d86d946c7e5224e25ba7f10a39a09fa11c94e17273727cf2f80551651b4dd2060c23d4b3b49198d9abc884a65cac05e1fd1a99f2060afb94d059e70169547d921097c9a218b9ed5163075858cac36d1776757d58d6a13a49534723697cb39f109259658cdd0981b4a1ca51ef7771fad22ef792ee63a75ec98ae8b44da51a863fdcd2252a470ddb64e9");
         consensus.hashGenesisBlock = genesis.GetHash();
 
-
-       arith_uint256 tnonce = 0;
-		LogPrintf("recalculating params for testnet.\n");
-		LogPrintf("old testnet genesis nonce: %s\n", genesis.nNonce.ToString().c_str());
-		LogPrintf("old testnet genesis hash:  %s\n", consensus.hashGenesisBlock.ToString().c_str());
-		// deliberately empty for loop finds nonce value.
-		for(tnonce = 0; UintToArith256(genesis.GetHash()) > UintToArith256(consensus.powLimit); tnonce++){
-			genesis.nNonce = ArithToUint256(tnonce);
-		}
-		LogPrintf("new testnet genesis merkle root: %s\n", genesis.hashMerkleRoot.ToString().c_str());
-		LogPrintf("new testnet genesis nonce: %s\n", genesis.nNonce.ToString().c_str());
-		LogPrintf("new testnet genesis hash: %s\n", genesis.GetHash().ToString().c_str());
 
 
         assert(consensus.hashGenesisBlock == uint256S("0x" + consensus.hashGenesisBlock.ToString()));
 
 
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("testnet.bbbcoin.site", "testnet.bbbcoin.site")); // Zcash
+        //vSeeds.push_back(CDNSSeedData("testnet.bbbcoin.site", "testnet.bbbcoin.site")); // Zcash
 
 
         // guarantees the first 2 characters, when base58 encoded, are "tm"
@@ -230,9 +231,9 @@ public:
 
         checkpointData = (Checkpoints::CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0x0364a12e11aabd49e5fa98297674700f0fe04ab54b685a7c1199646e259a5578")),
+            (0, uint256S("0003b07c264a367ca4ab4df0e9c43f1013f3e0bb979ae3bc6981b8e5460b70a1")),
          //   (38000, uint256S("0x001e9a2d2e2892b88e9998cf7b079b41d59dd085423a921fe8386cecc42287b8")),
-            1516547307,  // * UNIX timestamp of last checkpoint block
+			1516547308,  // * UNIX timestamp of last checkpoint block
             0,       // * total number of transactions between genesis and last checkpoint
                          //   (the tx=... number in the SetBestChain debug.log lines)
             100          //   total number of tx / (checkpoint block height / (24 * 24))

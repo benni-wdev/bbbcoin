@@ -74,7 +74,6 @@ Compiled binaries can be found in ./src directory. Copy them to your working pat
 
     cp ./src/bbbcoin-cli /usr/bin
     cp ./src/bbbcoind /usr/bin
-    cp ./zcutil/vot /usr/bin
 
 
 Running
