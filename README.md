@@ -1,3 +1,6 @@
+Coin is offline
+
+
 bbbcoin 1.0.0
 =============
 
