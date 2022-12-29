@@ -147,3 +147,8 @@ License
 -------
 
 For license information see the file [COPYING](COPYING).
+
+--------------------------------------
+benni-wdev
+
+[https://www.wdev.ch](https://www.wdev.ch/)
